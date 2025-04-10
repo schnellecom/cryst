@@ -108,6 +108,17 @@ Dependencies := rec(
   ExternalConditions := []
 ),
 
+Extensions := [
+ rec(
+   needed := [ ["Polymaking", "0.8.7"] ],
+   filename := "./gap/funddom.gd",
+ ),
+ rec(
+   needed := [ ["Polymaking", "0.8.7"] ],
+   filename := "./gap/funddom.gi",
+ ),
+],
+
 AvailabilityTest := ReturnTrue,
 
 #BannerString := "",

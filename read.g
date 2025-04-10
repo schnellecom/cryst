@@ -31,6 +31,8 @@ ReadPackage( "cryst", "gap/max.gi" );     # methods for maximal subgroups
 ReadPackage( "cryst", "gap/wyckoff.gi" ); # methods for Wyckoff positions
 ReadPackage( "cryst", "gap/color.gi" );   # methods for color groups
 
+# ReadPackage( "cryst", "gap/funddom.gi" );   # methods for fundamental domains
+
 if IsBound( GAPInfo.PackagesLoaded.xgap ) then
   ReadPackage( "cryst", "gap/wypopup.gi" ); # popup menu for Wyckoff graph
   ReadPackage( "cryst", "gap/wygraph.gi" ); # Wyckoff graph methods; needs XGAP
