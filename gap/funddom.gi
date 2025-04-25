@@ -13,7 +13,7 @@ BindGlobal("__cryst__EuclideanNorm",
         for i in [1..Length(x)] do
             res:=res+x[i]^2;
         od;
-        return Sqrt(res);
+        return Rat(Sqrt(Float(res)));
     end
 );
 
@@ -56,7 +56,6 @@ InstallGlobalFunction( DirichletCellForFiniteWord,
                 od;
             od;
         od;
-        #Print("elements generated\n");
 
         # generate all points of x^e for e \in elementsOfLenghtL
         elementsInOrbit := [];
@@ -64,29 +63,23 @@ InstallGlobalFunction( DirichletCellForFiniteWord,
             Add(elementsInOrbit, (vector*e));
         od;
 
-        #Print("Orbits generated\n");
-
         # calculate the hyperplanes necessary for the dirichlet construction
         # we cut of the last coordinate as it is always 0 because of the trailing 1 from the isometry operations
         # using the formulas presented here: https://math.stackexchange.com/questions/2858815/understanding-formula-for-hyperplanes
         hyperplanes:=[];
         for y in elementsInOrbit do
             h:=[];
-            h[1]:=1/2*(__cryst__EuclideanNorm((y))^2 - __cryst__EuclideanNorm(Rat(vector))^2);
+            h[1]:=1/2*(__cryst__EuclideanNorm((y))^2 - __cryst__EuclideanNorm((vector))^2);
             for i in [1..Length(vector)-1] do
                 h[i+1]:=Rat(y[i]-vector[i]);
             od;
             Add(hyperplanes, h);
         od;
 
-        #Print("hyperplanes generated\n");
-
         # remove zeroes, as they are not allowed
-        while not Position(hyperplanes, [0.,0.,0.,0.]) = fail do
-            Remove(hyperplanes, Position(hyperplanes, [0.,0.,0.,0.]));
+        while not Position(hyperplanes, [0,0,0,0]) = fail do
+            Remove(hyperplanes, Position(hyperplanes, [0,0,0,0]));
         od;
-
-        # Print(hyperplanes);
 
         # get the vertex coordinates with polymake
         polymakeObj:=CreatePolymakeObject();;
@@ -157,7 +150,7 @@ InstallGlobalFunction( DirichletCellForFiniteWord,
         # pr:=SetVertexCoordinates3D(fundDomSurface, coords);
         # DrawComplexToJavaScript(fundDomSurface, Concatenation("dirichlet-cell-", String(length)), pr);
 
-        Print("dirichlet cell has volume of: ", Float(Polymake(polymakeObj, "VOLUME")), "\n\n");
+        # Print("dirichlet cell has volume of: ", Float(Polymake(polymakeObj, "VOLUME")), "\n\n");
 
         # return [fundDomSurface, triangulatedFacets, coords];
         return [triangulatedFacets, coords];
