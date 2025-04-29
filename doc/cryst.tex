@@ -940,5 +940,60 @@ gap> SpaceGroupOnRightIT( 3, 146, 'r' );
 SpaceGroupOnRightIT(3,146,'r')
 \endexample
 
+\Chapter{Fundamental domains}
 
+Cyrstallographic groups can also be defined via fundamental domains, which is equivalent to the previous definitions. 
 
+So let $\Gamma \leq E(n)$ be a subgroup of the Euclidean group of dimension $n$ as well as $F \subseteq \R^n$ a closed subset. 
+We call $F$ a fundamental domain of $\Gamma$ if the following two properties are satisfied:
+
+$$\bigcup_{\gamma \in \Gamma} F^\gamma = \R^n$$
+and there is a system of representatives $V \subseteq \R^n$ of the orbits of $\Gamma$ on $\R^n$ such that 
+$$F^\circ \subseteq V \subseteq F.$$ 
+
+Further, if $\Gamma$ is a discrete subgroup and there exists a compact fundamental domain for $\Gamma$ we call $\Gamma$ a crystallographic group.
+
+With Bieberbachs theorem showing that there are finitely many Cyrstallographic groups for a fixed dimension and lists existing for small degrees (currently $\leq 6$) the question arises how one can compute such a compact fundamental domain. 
+
+One approach is to compute a Dirichlet cell, which for vectors in special position has been show to be a fundamental domain. However the formula for a Dirichlet cell contains an intersection over the orbit of an vector, which is an infinite set. In TODO it has been shown, that there is a finite word length such that the Dirichlet cell can be computed as the intersection only over the finite word length elements. Therefore, an algorithm has been implemented below, that takes a starting vector, crystallographic group and natural number and computes the Dirichlet cell over words of at most that length. If the natural number is big enough, the resulting polyhedron will be a Dirichlet cell. Combined with choosing a vector in special position, this allows a user to compute a fundamental domain for a given crystallographic group.
+To for $n=3$ to check if the number is big enough, there is a possibility to precompute the volume of the fundamental domains (is the same for all) (cite TODO). The algorithm below also prints the computed volume and when both are the same, the word length was sufficient. 
+
+\> DirichletCellForFiniteWord( <vector>, <length>, <generatingSet> ) F
+
+returns the Dirichlet cell computed as the intersection over the orbit of <vector> with elements being words of length at most <length> in <generatingSet>.
+A required package for the computation is <Polymaking>. 
+The result is a list <[triangulatedFacets, coords]> where <triangulatedFacets> is a list of the faces of the resulting polyhedron and <coords> contains the coordinates of the vertices. 
+
+\beginexample
+gap> LoadPackage("polymaking");;
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+Loading polymaking 0.8.7 (A package for using polymake in GAP)
+by Marc Roeder (roeder.marc@gmail.com).
+maintained by:
+   Marc Roeder (roeder.marc@gmail.com) and
+   The GAP Team (support@gap-system.org).
+Homepage: https://gap-packages.github.io/polymaking/
+Report issues at https://github.com/gap-packages/polymaking/issues
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+gap> cell := DirichletCellForFiniteWord([1/3,1/4,1/5,1], 4, 
+                                        GeneratorsOfGroup(SpaceGroupBBNWZ(3, 195)));;
+polymake: upgrading /tmp/gaptempdiriN29av/poly2545 from old plain file format
+polymake: used package ppl
+  The Parma Polyhedra Library ([[wiki:external_software#PPL]]): A C++ library for 
+  convex polyhedra and other numerical abstractions.
+  http://www.cs.unipr.it/ppl/
+\endexample
+
+If the packages <SimplicialSurfaces> and <GAPic> are also loaded, the resulting polyhedron can also be animated in an <.html> file.
+
+\beginexample
+gap> LoadPackage("SimplicialSurfaces");;
+gap> LoadPackage("GAPic");;
+[banners ommited for readability]
+gap> fundDomSurface:=SimplicialSurfaceByVerticesInFaces(cell[1]);
+simplicial surface (18 vertices, 48 edges, and 32 faces)
+gap> printRecord:=SetVertexCoordinates3D(fundDomSurface, cell[2]);;
+gap> DrawComplexToJavaScript(fundDomSurface, "dirichlet-cell.html", printRecord);;
+\endexample
+
+As a result of the commands used in the example above, there should be a file called <dirichlet-cell.html> in the current directory. This contains the animation, which can be viewed with most webbrowsers.
