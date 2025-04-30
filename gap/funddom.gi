@@ -1,11 +1,11 @@
-# Eulerian distance for internal use
+# Euclidean distance for internal use
 BindGlobal("__cryst__EuclideanDistance",
     function(x, y)
         return Sqrt( Float(x[1]-y[1])^2 + Float(x[2]-y[2])^2 + Float(x[3]-y[3])^2);
     end
 );
 
-# Eulerian distance for internal use
+# Euclidean distance for internal use
 BindGlobal("__cryst__EuclideanNorm",
     function(x)
         local res, minDist, i;
